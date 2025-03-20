@@ -212,7 +212,6 @@ def red_noise_block(psd='powerlaw', prior='log-uniform', Tspan=None,
 
     
     #Section for my power law model + parameter priors.
-    #Priors np.array([6,-30,0,fT(5*10**6,Trhl_0),0,0]),np.array([12,-1.5,9,f_pl,delN*5.6*10**(-6),Om_aLIGO])
     if psd == 'custom_powerlaw':
         log10_r = parameter.Uniform(-30, -1.5)
         n_t = parameter.Uniform(0,9)
