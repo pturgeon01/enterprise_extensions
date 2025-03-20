@@ -145,6 +145,7 @@ def red_noise_block(psd='powerlaw', prior='log-uniform', Tspan=None,
     :param dropout: Use a dropout analysis for intrinsic red noise models.
         Currently only supports power law option.
     :param k_threshold: Threshold for dropout analysis.
+    Adapted for my master's project.
     """
     # red noise parameters that are common
     if psd in ['powerlaw', 'powerlaw_genmodes', 'turnover',
@@ -205,6 +206,37 @@ def red_noise_block(psd='powerlaw', prior='log-uniform', Tspan=None,
 
         pl = gpp.free_spectrum(log10_rho=log10_rho)
 
+
+
+
+
+    
+    #Section for my power law model + parameter priors.
+    #Priors np.array([6,-30,0,fT(5*10**6,Trhl_0),0,0]),np.array([12,-1.5,9,f_pl,delN*5.6*10**(-6),Om_aLIGO])
+    if psd == 'custom_powerlaw':
+        log10_r = parameter.Uniform(-30, -1.5)
+        n_t = parameter.Uniform(0,9)
+        log10_T_rh = parameter.Uniform(6,12)
+        log10_f_inf = parameter.Uniform(gpp.fT(5*10**6), const.f_pl)
+
+        pl = gpp.custom_powerlaw(log10_r = log10_r, n_t = n_t, log10_T_rh = log10_T_rh, log10_f_inf = log10_f_inf)
+        
+        pl_BBN_prior = gpp.BBN_prior(log10_r = log10_r, n_t = n_t, log10_T_rh = log10_T_rh, log10_f_inf = log10_f_inf)
+        rn_BBN_prior = gp_signals.FourierBasisGP(pl_BBN_prior, components=components,
+                                            Tspan=Tspan, combine=combine,
+                                            coefficients=coefficients)
+        pl_LVK_prior = gpp.LVK_prior(log10_r = log10_r, n_t = n_t, log10_T_rh = log10_T_rh, log10_f_inf = log10_f_inf)
+        rn_LVK_prior = gp_signals.FourierBasisGP(pl_LVK_prior, components=components,
+                                            Tspan=Tspan, combine=combine,
+                                            coefficients=coefficients)
+        #rn is modified for a low likelihood if BBN bound is violated
+
+        rn_priors = rn_BBN_prior + rn_LVK_prior
+
+
+
+
+                                 
     if select == 'backend':
         # define selection by observing backend
         selection = selections.Selection(selections.by_backend)
@@ -248,8 +280,8 @@ def red_noise_block(psd='powerlaw', prior='log-uniform', Tspan=None,
         rn = rn + gp_signals.FourierBasisGP(pl, components=components,
                                             Tspan=Tspan, combine=combine,
                                             coefficients=coefficients)
-
-    return rn
+        
+    return rn + rn_BBN_prior + rn_LVK_prior
 
 
 def bwm_block(Tmin, Tmax, amp_prior='log-uniform',
