@@ -219,7 +219,9 @@ def red_noise_block(psd='powerlaw', prior='log-uniform', Tspan=None,
         log10_f_inf = parameter.Uniform(gpp.fT(5*10**6), const.f_pl)
 
         pl = gpp.custom_powerlaw(log10_r = log10_r, n_t = n_t, log10_T_rh = log10_T_rh, log10_f_inf = log10_f_inf)
-        
+        rn = gp_signals.FourierBasisGP(pl, components=components,
+                                            Tspan=Tspan, combine=combine,
+                                            coefficients=coefficients)
         pl_BBN_prior = gpp.BBN_prior(log10_r = log10_r, n_t = n_t, log10_T_rh = log10_T_rh, log10_f_inf = log10_f_inf)
         rn_BBN_prior = gp_signals.FourierBasisGP(pl_BBN_prior, components=components,
                                             Tspan=Tspan, combine=combine,
@@ -230,7 +232,7 @@ def red_noise_block(psd='powerlaw', prior='log-uniform', Tspan=None,
                                             coefficients=coefficients)
         #rn is modified for a low likelihood if BBN bound is violated
 
-        rn_priors = rn_BBN_prior + rn_LVK_prior
+        rn = rn + rn_LVK_prior + rn_BBN_prior
 
 
 
@@ -280,7 +282,7 @@ def red_noise_block(psd='powerlaw', prior='log-uniform', Tspan=None,
                                             Tspan=Tspan, combine=combine,
                                             coefficients=coefficients)
         
-    return rn + rn_BBN_prior + rn_LVK_prior
+    return rn
 
 
 def bwm_block(Tmin, Tmax, amp_prior='log-uniform',
