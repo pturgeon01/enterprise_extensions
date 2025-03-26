@@ -216,7 +216,7 @@ def red_noise_block(psd='powerlaw', prior='log-uniform', Tspan=None,
         log10_r = parameter.Uniform(-30, -1.5)
         n_t = parameter.Uniform(0,9)
         log10_T_rh = parameter.Uniform(6,12)
-        log10_f_inf = parameter.Uniform(gpp.fT(T = 5*10**6, log10_T_rh = log10_T_rh), const.f_pl)
+        log10_f_inf = parameter.Uniform(gpp.fT(5*10**6, log10_T_rh = log10_T_rh), const.f_pl)
 
         pl = gpp.custom_powerlaw(log10_r = log10_r, n_t = n_t, log10_T_rh = log10_T_rh, log10_f_inf = log10_f_inf)
         rn = gp_signals.FourierBasisGP(pl, components=components,
