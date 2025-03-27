@@ -219,13 +219,16 @@ def red_noise_block(psd='powerlaw', prior='log-uniform', Tspan=None,
         log10_f_inf = parameter.Uniform(-15, const.f_pl, size=components)
 
         pl = gpp.custom_powerlaw(log10_r = log10_r, n_t = n_t, log10_T_rh = log10_T_rh, log10_f_inf = log10_f_inf)
-
+        pl = np.array(pl)
         #pl_BBN_prior = gpp.BBN_prior(log10_r = log10_r, n_t = n_t, log10_T_rh = log10_T_rh, log10_f_inf = log10_f_inf)
+        #pl_BBN_prior = np.array(pl_BBN_prior)
         #pl_LVK_prior = gpp.LVK_prior(log10_r = log10_r, n_t = n_t, log10_T_rh = log10_T_rh, log10_f_inf = log10_f_inf)
+        #pl_LVK_prior = np.array(pl_LVK_prior)
         #pl_f_inf_prior = gpp.f_inf_prior(log10_T_rh = log10_T_rh)
+        #pl_f_inf_prior = np.array(pl_f_inf_prior)
         
         #pl is modified for a low likelihood if BBN bound is violated
-
+        
         #pl = pl + pl_LVK_prior + pl_BBN_prior + pl_f_inf_prior
 
 
@@ -816,10 +819,13 @@ def common_red_noise_block(psd='powerlaw', prior='log-uniform',
         log10_f_inf = parameter.Uniform(10**(-11), const.f_pl, size=components)(log_10_f_infname)
 
         cpl = gpp.custom_powerlaw(log10_r = log10_r, n_t = n_t, log10_T_rh = log10_T_rh, log10_f_inf = log10_f_inf)
+        cpl = np.array(cpl)
         cpl_BBN_prior = gpp.BBN_prior(log10_r = log10_r, n_t = n_t, log10_T_rh = log10_T_rh, log10_f_inf = log10_f_inf)
+        cpl_BBN_prior = np.array(cpl_BBN_prior)
         cpl_LVK_prior = gpp.LVK_prior(log10_r = log10_r, n_t = n_t, log10_T_rh = log10_T_rh, log10_f_inf = log10_f_inf)
+        cpl_LVK_prior = np.array(cpl_LVK_prior)
         cpl_f_inf_prior = gpp.f_inf_prior(log10_T_rh = log10_T_rh)
-        
+        cpl_f_inf_prior = np.array(cpl_f_inf_prior)
         #cpl is modified for a low likelihood if BBN bound is violated
         
         cpl = cpl + cpl_BBN_prior + cpl_LVK_prior + cpl_f_inf_prior
