@@ -824,7 +824,7 @@ def common_red_noise_block(psd='powerlaw', prior='log-uniform',
         log10_r = parameter.Uniform(-30, -1.5, size=components)(log10_rname)
         n_t = parameter.Uniform(0,9, size=components)(n_tname)
         log10_T_rh = parameter.Uniform(6,12, size=components)(log_10_T_rhname)
-        log10_f_inf = parameter.Uniform(10**(-11), const.f_pl, size=components)(log__10_f_infname)
+        log10_f_inf = parameter.Uniform(10**(-11), const.f_pl, size=components)(log_10_f_infname)
 
         cpl = gpp.custom_powerlaw(log10_r = log10_r, n_t = n_t, log10_T_rh = log10_T_rh, log10_f_inf = log10_f_inf)
         cpl_BBN_prior = gpp.BBN_prior(log10_r = log10_r, n_t = n_t, log10_T_rh = log10_T_rh, log10_f_inf = log10_f_inf)
