@@ -827,42 +827,47 @@ def common_red_noise_block(psd='powerlaw', prior='log-uniform',
         log10_f_inf = parameter.Uniform(10**(-11), const.f_pl, size=components)(log__10_f_infname)
 
         cpl = gpp.custom_powerlaw(log10_r = log10_r, n_t = n_t, log10_T_rh = log10_T_rh, log10_f_inf = log10_f_inf)
-        crn = gp_signals.FourierBasisGP(cpl, components=components,
-                                            Tspan=Tspan, combine=combine,
-                                            coefficients=coefficients)
-      
         cpl_BBN_prior = gpp.BBN_prior(log10_r = log10_r, n_t = n_t, log10_T_rh = log10_T_rh, log10_f_inf = log10_f_inf)
-        crn_BBN_prior = gp_signals.FourierBasisGP(cpl_BBN_prior, components=components,
-                                            Tspan=Tspan, combine=combine,
-                                            coefficients=coefficients)
-      
         cpl_LVK_prior = gpp.LVK_prior(log10_r = log10_r, n_t = n_t, log10_T_rh = log10_T_rh, log10_f_inf = log10_f_inf)
-        crn_LVK_prior = gp_signals.FourierBasisGP(cpl_LVK_prior, components=components,
-                                            Tspan=Tspan, combine=combine,
-                                            coefficients=coefficients)
-      
         cpl_f_inf_prior = gpp.f_inf_prior(log10_T_rh = log10_T_rh)
-        crn_f_inf_prior = gp_signals.FourierBasisGP(cpl_f_inf_prior,components=components,
-                                            Tspan=Tspan, combine=combine,
-                                            coefficients=coefficients)
         #crn is modified for a low likelihood if BBN bound is violated
-
-        crn = crn + crn_LVK_prior + crn_BBN_prior + crn_f_inf_prior
-
-
 
                              
     if orf is None:
         crn = gp_signals.FourierBasisGP(cpl, coefficients=coefficients, combine=combine,
                                         components=components, Tspan=Tspan,
-                                        name=name, pshift=pshift, pseed=pseed)
+                                        name=name, pshift=pshift, pseed=pseed) + gp_signals.FourierBasisGP(cpl_BBN_prior, components=components,
+                                            Tspan=Tspan, combine=combine,
+                                            coefficients=coefficients) + gp_signals.FourierBasisGP(cpl_LVK_prior, components=components,
+                                            Tspan=Tspan, combine=combine,
+                                            coefficients=coefficients) + gp_signals.FourierBasisGP(cpl_f_inf_prior,components=components,
+                                            Tspan=Tspan, combine=combine,
+                                            coefficients=coefficients)
     elif orf in orfs.keys():
         if orf == 'crn':
             crn = gp_signals.FourierBasisGP(cpl, coefficients=coefficients, combine=combine,
-                                            components=components, Tspan=Tspan,
-                                            name=name, pshift=pshift, pseed=pseed)
+                                        components=components, Tspan=Tspan,
+                                        name=name, pshift=pshift, pseed=pseed) + gp_signals.FourierBasisGP(cpl_BBN_prior, components=components,
+                                            Tspan=Tspan, combine=combine,
+                                            coefficients=coefficients) + gp_signals.FourierBasisGP(cpl_LVK_prior, components=components,
+                                            Tspan=Tspan, combine=combine,
+                                            coefficients=coefficients) + gp_signals.FourierBasisGP(cpl_f_inf_prior,components=components,
+                                            Tspan=Tspan, combine=combine,
+                                            coefficients=coefficients)
         else:
             crn = gp_signals.FourierBasisCommonGP(cpl, orfs[orf],
+                                                  components=components, combine=combine,
+                                                  Tspan=Tspan,
+                                                  name=name, pshift=pshift,
+                                                  pseed=pseed) + gp_signals.FourierBasisCommonGP(cpl_BBN_prior, orfs[orf],
+                                                  components=components, combine=combine,
+                                                  Tspan=Tspan,
+                                                  name=name, pshift=pshift,
+                                                  pseed=pseed) + gp_signals.FourierBasisCommonGP(cpl_LVK_prior, orfs[orf],
+                                                  components=components, combine=combine,
+                                                  Tspan=Tspan,
+                                                  name=name, pshift=pshift,
+                                                  pseed=pseed) + gp_signals.FourierBasisCommonGP(cpl_f_inf_prior, orfs[orf],
                                                   components=components, combine=combine,
                                                   Tspan=Tspan,
                                                   name=name, pshift=pshift,
