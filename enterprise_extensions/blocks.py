@@ -205,10 +205,12 @@ def red_noise_block(psd='powerlaw', prior='log-uniform', Tspan=None,
             log10_rho = parameter.Uniform(-10, -4, size=components)
 
         pl = gpp.free_spectrum(log10_rho=log10_rho)
-
-
-
-
+        rn = gp_signals.FourierBasisGP(utils.powerlaw(log10_A=0, gamma=0), components=components,
+                                       Tspan=Tspan,
+                                       combine=combine,
+                                       coefficients=coefficients,
+                                       selection=selection,
+                                       modes=modes)
 
     
     #Section for my power law model + parameter priors.
@@ -219,7 +221,12 @@ def red_noise_block(psd='powerlaw', prior='log-uniform', Tspan=None,
         log10_f_inf = parameter.Uniform(-15, const.f_pl, size=components)
 
         pl = gpp.custom_powerlaw(log10_r = log10_r, n_t = n_t, log10_T_rh = log10_T_rh, log10_f_inf = log10_f_inf)
-        rn = 0
+        rn = gp_signals.FourierBasisGP(utils.powerlaw(log10_A=0, gamma=0), components=components,
+                                       Tspan=Tspan,
+                                       combine=combine,
+                                       coefficients=coefficients,
+                                       selection=selection,
+                                       modes=modes)
         #rn = gp_signals.FourierBasisGP(pl, components=components,
                                        #Tspan=Tspan,
                                        #combine=combine,
@@ -840,6 +847,12 @@ def common_red_noise_block(psd='powerlaw', prior='log-uniform',
         log10_f_inf = parameter.Uniform(10**(-11), const.f_pl, size=components)(log_10_f_infname)
 
         cpl = gpp.custom_powerlaw(log10_r = log10_r, n_t = n_t, log10_T_rh = log10_T_rh, log10_f_inf = log10_f_inf)
+        crn = gp_signals.FourierBasisGP(utils.powerlaw(log10_A=0, gamma=0), components=components,
+                                       Tspan=Tspan,
+                                       combine=combine,
+                                       coefficients=coefficients,
+                                       selection=selection,
+                                       modes=modes)
         cpl_BBN_prior = gpp.BBN_prior(log10_r = log10_r, n_t = n_t, log10_T_rh = log10_T_rh, log10_f_inf = log10_f_inf)
         crn_BBN_prior = gp_signals.FourierBasisGP(cpl_BBN_prior, components=components,
                                        Tspan=Tspan,
