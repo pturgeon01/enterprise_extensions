@@ -298,7 +298,7 @@ def red_noise_block(psd='powerlaw', prior='log-uniform', Tspan=None,
                                             name='red_noise_hf')
         rn = rn + rn_flat
     else:
-        rn = rn + gp_signals.FourierBasisGP(pl, components=components,
+        rn = gp_signals.FourierBasisGP(pl, components=components,
                                        Tspan=Tspan,
                                        combine=combine,
                                        coefficients=coefficients,
