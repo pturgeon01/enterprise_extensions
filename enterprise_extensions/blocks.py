@@ -150,6 +150,12 @@ def red_noise_block(psd='powerlaw', prior='log-uniform', Tspan=None,
     # red noise parameters that are common
     if psd in ['powerlaw', 'powerlaw_genmodes', 'turnover',
                'tprocess', 'tprocess_adapt']:
+        gp_signals.FourierBasisGP(utils.powerlaw(log10_A=0, gamma=0), components=components,
+                                       Tspan=Tspan,
+                                       combine=combine,
+                                       coefficients=coefficients,
+                                       selection=selection,
+                                       modes=modes)
         # parameters shared by PSD functions
         if logmin is not None and logmax is not None:
             if prior == 'uniform':
