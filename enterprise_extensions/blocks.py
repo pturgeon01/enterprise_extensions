@@ -229,7 +229,7 @@ def red_noise_block(psd='powerlaw', prior='log-uniform', Tspan=None,
         
         #pl is modified for a low likelihood if BBN bound is violated
         
-        #pl = pl + pl_LVK_prior + pl_BBN_prior + pl_f_inf_prior
+        #pl = np.add(np.add(pl,pl_LVK_prior),np.add(pl_BBN_prior,pl_f_inf_prior))
 
 
 
@@ -827,8 +827,7 @@ def common_red_noise_block(psd='powerlaw', prior='log-uniform',
         cpl_f_inf_prior = gpp.f_inf_prior(log10_T_rh = log10_T_rh)
         cpl_f_inf_prior = np.array(cpl_f_inf_prior)
         #cpl is modified for a low likelihood if BBN bound is violated
-        
-        cpl = cpl + cpl_BBN_prior + cpl_LVK_prior + cpl_f_inf_prior
+        cpl = np.add(np.add(cpl,cpl_LVK_prior),np.add(cpl_BBN_prior,cpl_f_inf_prior))
                              
     if orf is None:
         crn = gp_signals.FourierBasisGP(cpl, coefficients=coefficients, combine=combine,
