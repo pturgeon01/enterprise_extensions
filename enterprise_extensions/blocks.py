@@ -216,23 +216,28 @@ def red_noise_block(psd='powerlaw', prior='log-uniform', Tspan=None,
         log10_r = parameter.Uniform(-30, -1.5, size=components)
         n_t = parameter.Uniform(0,9, size=components)
         log10_T_rh = parameter.Uniform(6,12, size=components)
-        log10_f_inf = parameter.Uniform(10**(-11), const.f_pl, size=components)
+        log10_f_inf = parameter.Uniform(-15, const.f_pl, size=components)
 
         pl = gpp.custom_powerlaw(log10_r = log10_r, n_t = n_t, log10_T_rh = log10_T_rh, log10_f_inf = log10_f_inf)
         rn = gp_signals.FourierBasisGP(pl, components=components,
                                             Tspan=Tspan, combine=combine,
                                             coefficients=coefficients)
-        pl_BBN_prior = gpp.BBN_prior(log10_r = log10_r, n_t = n_t, log10_T_rh = log10_T_rh, log10_f_inf = log10_f_inf)
-        rn_BBN_prior = gp_signals.FourierBasisGP(pl_BBN_prior, components=components,
-                                            Tspan=Tspan, combine=combine,
-                                            coefficients=coefficients)
-        pl_LVK_prior = gpp.LVK_prior(log10_r = log10_r, n_t = n_t, log10_T_rh = log10_T_rh, log10_f_inf = log10_f_inf)
-        rn_LVK_prior = gp_signals.FourierBasisGP(pl_LVK_prior, components=components,
-                                            Tspan=Tspan, combine=combine,
-                                            coefficients=coefficients)
+        #pl_BBN_prior = gpp.BBN_prior(log10_r = log10_r, n_t = n_t, log10_T_rh = log10_T_rh, log10_f_inf = log10_f_inf)
+        #rn_BBN_prior = gp_signals.FourierBasisGP(pl_BBN_prior, components=components,
+                                            #Tspan=Tspan, combine=combine,
+                                            #coefficients=coefficients)
+        #pl_LVK_prior = gpp.LVK_prior(log10_r = log10_r, n_t = n_t, log10_T_rh = log10_T_rh, log10_f_inf = log10_f_inf)
+        #rn_LVK_prior = gp_signals.FourierBasisGP(pl_LVK_prior, components=components,
+                                            #Tspan=Tspan, combine=combine,
+                                            #coefficients=coefficients)
+        #pl_f_inf_prior = gpp.f_inf_prior(log10_T_rh = log10_T_rh)
+        #rn_f_inf_prior = gp_signals.FourierBasisGP(pl_f_inf_prior,components=components,
+                                            #Tspan=Tspan, combine=combine,
+                                            #coefficients=coefficients)
+                      
         #rn is modified for a low likelihood if BBN bound is violated
 
-        rn = rn + rn_LVK_prior + rn_BBN_prior
+        #rn = rn + rn_LVK_prior + rn_BBN_prior + rn_f_inf_prior
 
 
 
@@ -269,13 +274,13 @@ def red_noise_block(psd='powerlaw', prior='log-uniform', Tspan=None,
                                             combine=combine,
                                             name='red_noise_hf')
         rn = rn + rn_flat
-    else:
-        rn = gp_signals.FourierBasisGP(pl, components=components,
-                                       Tspan=Tspan,
-                                       combine=combine,
-                                       coefficients=coefficients,
-                                       selection=selection,
-                                       modes=modes)
+    #else:
+        #rn = gp_signals.FourierBasisGP(pl, components=components,
+                                       #Tspan=Tspan,
+                                       #combine=combine,
+                                       #coefficients=coefficients,
+                                       #selection=selection,
+                                       #modes=modes)
 
     if select == 'band+':  # Add the common component as well
         rn = rn + gp_signals.FourierBasisGP(pl, components=components,
@@ -806,6 +811,47 @@ def common_red_noise_block(psd='powerlaw', prior='log-uniform',
 
         cpl = gpp.free_spectrum(log10_rho=log10_rho_gw)
 
+                             
+      
+#My custom code for the common red noise function
+                             
+    if psd == 'custom_powerlaw':
+        log10_rname = '{}_log10_r'.format(name)
+        n_tname = '{}_n_t'.format(name)
+        log_10_T_rhname = '{}_log10_T_rh'.format(name)
+        log_10_f_infname = '{}_log10_T_rh'.format(name)
+      
+        log10_r = parameter.Uniform(-30, -1.5, size=components)(log10_rname)
+        n_t = parameter.Uniform(0,9, size=components)(n_tname)
+        log10_T_rh = parameter.Uniform(6,12, size=components)(log_10_T_rhname)
+        log10_f_inf = parameter.Uniform(10**(-11), const.f_pl, size=components)(log__10_f_infname)
+
+        cpl = gpp.custom_powerlaw(log10_r = log10_r, n_t = n_t, log10_T_rh = log10_T_rh, log10_f_inf = log10_f_inf)
+        crn = gp_signals.FourierBasisGP(cpl, components=components,
+                                            Tspan=Tspan, combine=combine,
+                                            coefficients=coefficients)
+      
+        cpl_BBN_prior = gpp.BBN_prior(log10_r = log10_r, n_t = n_t, log10_T_rh = log10_T_rh, log10_f_inf = log10_f_inf)
+        crn_BBN_prior = gp_signals.FourierBasisGP(cpl_BBN_prior, components=components,
+                                            Tspan=Tspan, combine=combine,
+                                            coefficients=coefficients)
+      
+        cpl_LVK_prior = gpp.LVK_prior(log10_r = log10_r, n_t = n_t, log10_T_rh = log10_T_rh, log10_f_inf = log10_f_inf)
+        crn_LVK_prior = gp_signals.FourierBasisGP(cpl_LVK_prior, components=components,
+                                            Tspan=Tspan, combine=combine,
+                                            coefficients=coefficients)
+      
+        cpl_f_inf_prior = gpp.f_inf_prior(log10_T_rh = log10_T_rh)
+        crn_f_inf_prior = gp_signals.FourierBasisGP(cpl_f_inf_prior,components=components,
+                                            Tspan=Tspan, combine=combine,
+                                            coefficients=coefficients)
+        #crn is modified for a low likelihood if BBN bound is violated
+
+        crn = crn + crn_LVK_prior + crn_BBN_prior + crn_f_inf_prior
+
+
+
+                             
     if orf is None:
         crn = gp_signals.FourierBasisGP(cpl, coefficients=coefficients, combine=combine,
                                         components=components, Tspan=Tspan,
