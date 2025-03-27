@@ -827,42 +827,18 @@ def common_red_noise_block(psd='powerlaw', prior='log-uniform',
     if orf is None:
         crn = gp_signals.FourierBasisGP(cpl, coefficients=coefficients, combine=combine,
                                         components=components, Tspan=Tspan,
-                                        name=name, pshift=pshift, pseed=pseed) + gp_signals.FourierBasisGP(cpl_BBN_prior, components=components,
-                                            Tspan=Tspan, combine=combine,
-                                            coefficients=coefficients) + gp_signals.FourierBasisGP(cpl_LVK_prior, components=components,
-                                            Tspan=Tspan, combine=combine,
-                                            coefficients=coefficients) + gp_signals.FourierBasisGP(cpl_f_inf_prior,components=components,
-                                            Tspan=Tspan, combine=combine,
-                                            coefficients=coefficients)
+                                        name=name, pshift=pshift, pseed=pseed)
     elif orf in orfs.keys():
         if orf == 'crn':
             crn = gp_signals.FourierBasisGP(cpl, coefficients=coefficients, combine=combine,
                                         components=components, Tspan=Tspan,
-                                        name=name, pshift=pshift, pseed=pseed) + gp_signals.FourierBasisGP(cpl_BBN_prior, components=components,
-                                            Tspan=Tspan, combine=combine,
-                                            coefficients=coefficients) + gp_signals.FourierBasisGP(cpl_LVK_prior, components=components,
-                                            Tspan=Tspan, combine=combine,
-                                            coefficients=coefficients) + gp_signals.FourierBasisGP(cpl_f_inf_prior,components=components,
-                                            Tspan=Tspan, combine=combine,
-                                            coefficients=coefficients)
+                                        name=name, pshift=pshift, pseed=pseed)
         else:
             crn = gp_signals.FourierBasisCommonGP(cpl, orfs[orf],
                                                   components=components, combine=combine,
                                                   Tspan=Tspan,
                                                   name=name, pshift=pshift,
-                                                  pseed=pseed) + gp_signals.FourierBasisCommonGP(cpl_BBN_prior, orfs[orf],
-                                                  components=components, combine=combine,
-                                                  Tspan=Tspan,
-                                                  name=name, pshift=pshift,
-                                                  pseed=pseed) + gp_signals.FourierBasisCommonGP(cpl_LVK_prior, orfs[orf],
-                                                  components=components, combine=combine,
-                                                  Tspan=Tspan,
-                                                  name=name, pshift=pshift,
-                                                  pseed=pseed) + gp_signals.FourierBasisCommonGP(cpl_f_inf_prior, orfs[orf],
-                                                  components=components, combine=combine,
-                                                  Tspan=Tspan,
-                                                  name=name, pshift=pshift,
-                                                  pseed=pseed)
+                                                  pseed=pseed) 
     elif isinstance(orf, types.FunctionType):
         crn = gp_signals.FourierBasisCommonGP(cpl, orf,
                                               components=components, combine=combine,
