@@ -211,6 +211,15 @@ def red_noise_block(psd='powerlaw', prior='log-uniform', Tspan=None,
                                        coefficients=coefficients,
                                        selection=selection,
                                        modes=modes)
+    if select == 'backend':
+        # define selection by observing backend
+        selection = selections.Selection(selections.by_backend)
+    elif select == 'band' or select == 'band+':
+        # define selection by observing band
+        selection = selections.Selection(selections.by_band)
+    else:
+        # define no selection
+        selection = selections.Selection(selections.no_selection)
 
     
     #Section for my power law model + parameter priors.
@@ -260,18 +269,6 @@ def red_noise_block(psd='powerlaw', prior='log-uniform', Tspan=None,
         #rn = rn_f_inf_prior + rn_LVK_prior + rn_f_inf_prior
 
 
-
-
-                                 
-    if select == 'backend':
-        # define selection by observing backend
-        selection = selections.Selection(selections.by_backend)
-    elif select == 'band' or select == 'band+':
-        # define selection by observing band
-        selection = selections.Selection(selections.by_band)
-    else:
-        # define no selection
-        selection = selections.Selection(selections.no_selection)
 
     if break_flat:
         log10_A_flat = parameter.Uniform(-20, -11)
