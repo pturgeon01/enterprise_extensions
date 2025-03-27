@@ -147,6 +147,15 @@ def red_noise_block(psd='powerlaw', prior='log-uniform', Tspan=None,
     :param k_threshold: Threshold for dropout analysis.
     Adapted for my master's project.
     """
+    if select == 'backend':
+        # define selection by observing backend
+        selection = selections.Selection(selections.by_backend)
+    elif select == 'band' or select == 'band+':
+        # define selection by observing band
+        selection = selections.Selection(selections.by_band)
+    else:
+        # define no selection
+        selection = selections.Selection(selections.no_selection)
     # red noise parameters that are common
     if psd in ['powerlaw', 'powerlaw_genmodes', 'turnover',
                'tprocess', 'tprocess_adapt']:
@@ -217,17 +226,8 @@ def red_noise_block(psd='powerlaw', prior='log-uniform', Tspan=None,
                                        coefficients=coefficients,
                                        selection=selection,
                                        modes=modes)
-    if select == 'backend':
-        # define selection by observing backend
-        selection = selections.Selection(selections.by_backend)
-    elif select == 'band' or select == 'band+':
-        # define selection by observing band
-        selection = selections.Selection(selections.by_band)
-    else:
-        # define no selection
-        selection = selections.Selection(selections.no_selection)
 
-    
+                      
     #Section for my power law model + parameter priors.
     if psd == 'custom_powerlaw':
         log10_r = parameter.Uniform(-30, -1.5, size=components)
