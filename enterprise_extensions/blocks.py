@@ -159,12 +159,6 @@ def red_noise_block(psd='powerlaw', prior='log-uniform', Tspan=None,
     # red noise parameters that are common
     if psd in ['powerlaw', 'powerlaw_genmodes', 'turnover',
                'tprocess', 'tprocess_adapt']:
-        gp_signals.FourierBasisGP(utils.powerlaw(log10_A=0, gamma=0), components=components,
-                                       Tspan=Tspan,
-                                       combine=combine,
-                                       coefficients=coefficients,
-                                       selection=selection,
-                                       modes=modes)
         # parameters shared by PSD functions
         if logmin is not None and logmax is not None:
             if prior == 'uniform':
@@ -220,20 +214,14 @@ def red_noise_block(psd='powerlaw', prior='log-uniform', Tspan=None,
             log10_rho = parameter.Uniform(-10, -4, size=components)
 
         pl = gpp.free_spectrum(log10_rho=log10_rho)
-        rn = gp_signals.FourierBasisGP(utils.powerlaw(log10_A=0, gamma=0), components=components,
-                                       Tspan=Tspan,
-                                       combine=combine,
-                                       coefficients=coefficients,
-                                       selection=selection,
-                                       modes=modes)
 
                       
     #Section for my power law model + parameter priors.
     if psd == 'custom_powerlaw':
-        log10_r = parameter.Uniform(-30, -1.5, size=components)
-        n_t = parameter.Uniform(0,9, size=components)
-        log10_T_rh = parameter.Uniform(6,12, size=components)
-        log10_f_inf = parameter.Uniform(-15, const.f_pl, size=components)
+        log10_r = parameter.Uniform(-30, -1.5)
+        n_t = parameter.Uniform(0,9)
+        log10_T_rh = parameter.Uniform(6,12)
+        log10_f_inf = parameter.Uniform(-15, const.f_pl)
 
         pl = gpp.custom_powerlaw(log10_r = log10_r, n_t = n_t, log10_T_rh = log10_T_rh, log10_f_inf = log10_f_inf)
         rn = gp_signals.FourierBasisGP(utils.powerlaw(log10_A=0, gamma=0), components=components,
@@ -844,10 +832,10 @@ def common_red_noise_block(psd='powerlaw', prior='log-uniform',
         log_10_T_rhname = '{}_log10_T_rh'.format(name)
         log_10_f_infname = '{}_log10_T_rh'.format(name)
       
-        log10_rgw = parameter.Uniform(-30, -1.5, size=components)(log10_rname)
-        n_tgw = parameter.Uniform(0,9, size=components)(n_tname)
-        log10_T_rhgw = parameter.Uniform(6,12, size=components)(log_10_T_rhname)
-        log10_f_infgw = parameter.Uniform(10**(-11), const.f_pl, size=components)(log_10_f_infname)
+        log10_rgw = parameter.Uniform(-30, -1.5)(log10_rname)
+        n_tgw = parameter.Uniform(0,9)(n_tname)
+        log10_T_rhgw = parameter.Uniform(6,12)(log_10_T_rhname)
+        log10_f_infgw = parameter.Uniform(10**(-11), const.f_pl)(log_10_f_infname)
 
         cpl = gpp.custom_powerlaw(log10_r = log10_rgw, n_t = n_tgw, log10_T_rh = log10_T_rhgw, log10_f_inf = log10_f_infgw)
         #crn = gp_signals.FourierBasisGP(utils.powerlaw(log10_A=0, gamma=0), coefficients=coefficients, combine=combine,
