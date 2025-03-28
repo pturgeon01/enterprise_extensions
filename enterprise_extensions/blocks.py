@@ -838,9 +838,9 @@ def common_red_noise_block(psd='powerlaw', prior='log-uniform',
         log10_f_infgw = parameter.Uniform(-11, np.log10(const.f_pl) - 35)(log_10_f_infname)
 
         cpl = gpp.custom_powerlaw(log10_r = log10_rgw, n_t = n_tgw, log10_T_rh = log10_T_rhgw, log10_f_inf = log10_f_infgw)
-        cpl_BBN_prior = gpp.BBN_prior(log10_r = log10_r, n_t = n_t, log10_T_rh = log10_T_rh, log10_f_inf = log10_f_inf)
-        cpl_LVK_prior = gpp.LVK_prior(log10_r = log10_r, n_t = n_t, log10_T_rh = log10_T_rh, log10_f_inf = log10_f_inf)
-        cpl_f_inf_prior = gpp.f_inf_prior(log10_T_rh = log10_T_rh)
+        cpl_BBN_prior = gpp.BBN_prior(log10_r = log10_rgw, n_t = n_tgw, log10_T_rh = log10_T_rhgw, log10_f_inf = log10_f_infgw)
+        cpl_LVK_prior = gpp.LVK_prior(log10_r = log10_rgw, n_t = n_tgw, log10_T_rh = log10_T_rhgw, log10_f_inf = log10_f_infgw)
+        cpl_f_inf_prior = gpp.f_inf_prior(log10_T_rh = log10_T_rhgw)
   
     if orf is None:
         crn = gp_signals.FourierBasisGP(cpl, coefficients=coefficients, combine=combine,
