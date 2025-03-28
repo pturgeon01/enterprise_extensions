@@ -835,27 +835,12 @@ def common_red_noise_block(psd='powerlaw', prior='log-uniform',
         log10_rgw = parameter.Uniform(-30, -1.5)(log10_rname)
         n_tgw = parameter.Uniform(0,9)(n_tname)
         log10_T_rhgw = parameter.Uniform(6,12)(log_10_T_rhname)
-        log10_f_infgw = parameter.Uniform(-11, np.log10(const.f_pl))(log_10_f_infname)
+        log10_f_infgw = parameter.Uniform(-11, np.log10(const.f_pl) - 35)(log_10_f_infname)
 
         cpl = gpp.custom_powerlaw(log10_r = log10_rgw, n_t = n_tgw, log10_T_rh = log10_T_rhgw, log10_f_inf = log10_f_infgw)
-        #crn = gp_signals.FourierBasisGP(utils.powerlaw(log10_A=0, gamma=0), coefficients=coefficients, combine=combine,
-                                        #components=components, Tspan=Tspan,
-                                        #name=name, pshift=pshift, pseed=pseed)
-        #cpl_BBN_prior = gpp.BBN_prior(log10_r = log10_r, n_t = n_t, log10_T_rh = log10_T_rh, log10_f_inf = log10_f_inf)
-        #crn_BBN_prior = gp_signals.FourierBasisGP(cpl_BBN_prior, coefficients=coefficients, combine=combine,
-                                        #components=components, Tspan=Tspan,
-                                        #name=name, pshift=pshift, pseed=pseed)
-        #cpl_LVK_prior = gpp.LVK_prior(log10_r = log10_r, n_t = n_t, log10_T_rh = log10_T_rh, log10_f_inf = log10_f_inf)
-        #crn_LVK_prior = gp_signals.FourierBasisGP(cpl_LVK_prior, coefficients=coefficients, combine=combine,
-                                        #components=components, Tspan=Tspan,
-                                        #name=name, pshift=pshift, pseed=pseed)
-        #cpl_f_inf_prior = gpp.f_inf_prior(log10_T_rh = log10_T_rh)
-        #crn_f_inf_prior = gp_signals.FourierBasisGP(cpl_f_inf_prior, coefficients=coefficients, combine=combine,
-                                        #components=components, Tspan=Tspan,
-                                        #name=name, pshift=pshift, pseed=pseed)
-        #crn is modified for a low likelihood if BBN bound is violated
-        #crn = crn_BBN_prior + crn_LVK_prior + crn_f_inf_prior
-
+        cpl_BBN_prior = gpp.BBN_prior(log10_r = log10_r, n_t = n_t, log10_T_rh = log10_T_rh, log10_f_inf = log10_f_inf)
+        cpl_LVK_prior = gpp.LVK_prior(log10_r = log10_r, n_t = n_t, log10_T_rh = log10_T_rh, log10_f_inf = log10_f_inf)
+        cpl_f_inf_prior = gpp.f_inf_prior(log10_T_rh = log10_T_rh)
   
     if orf is None:
         crn = gp_signals.FourierBasisGP(cpl, coefficients=coefficients, combine=combine,
@@ -878,6 +863,15 @@ def common_red_noise_block(psd='powerlaw', prior='log-uniform',
                                               Tspan=Tspan,
                                               name=name, pshift=pshift,
                                               pseed=pseed)
+    if psd == 'custom_powerlaw':
+      #Add my custom priors
+      crn = crn + gp_signals.FourierBasisGP(cpl_BBN_prior, coefficients=coefficients, combine=combine,
+                                        components=components, Tspan=Tspan,
+                                        name=name, pshift=pshift, pseed=pseed) + gp_signals.FourierBasisGP(cpl_LVK_prior, coefficients=coefficients, combine=combine,
+                                        components=components, Tspan=Tspan,
+                                        name=name, pshift=pshift, pseed=pseed) + gp_signals.FourierBasisGP(cpl_f_inf_prior, coefficients=coefficients, combine=combine,
+                                        components=components, Tspan=Tspan,
+                                        name=name, pshift=pshift, pseed=pseed)
     else:
         raise ValueError('ORF {} not recognized'.format(orf))
 
