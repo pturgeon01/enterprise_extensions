@@ -230,39 +230,6 @@ def red_noise_block(psd='powerlaw', prior='log-uniform', Tspan=None,
                                        coefficients=coefficients,
                                        selection=selection,
                                        modes=modes)
-        #rn = gp_signals.FourierBasisGP(pl, components=components,
-                                       #Tspan=Tspan,
-                                       #combine=combine,
-                                       #coefficients=coefficients,
-                                       #selection=selection,
-                                       #modes=modes)
-        #pl_BBN_prior = gpp.BBN_prior(log10_r = log10_r, n_t = n_t, log10_T_rh = log10_T_rh, log10_f_inf = log10_f_inf)
-        #rn_BBN_prior = gp_signals.FourierBasisGP(pl_BBN_prior, components=components,
-                                       #Tspan=Tspan,
-                                       #combine=combine,
-                                       #coefficients=coefficients,
-                                       #selection=selection,
-                                       #modes=modes)
-        #pl_LVK_prior = gpp.LVK_prior(log10_r = log10_r, n_t = n_t, log10_T_rh = log10_T_rh, log10_f_inf = log10_f_inf)
-        #rn_LVK_prior = gp_signals.FourierBasisGP(pl_LVK_prior, components=components,
-                                       #Tspan=Tspan,
-                                       #combine=combine,
-                                       #coefficients=coefficients,
-                                       #selection=selection,
-                                       #modes=modes)
-        #pl_f_inf_prior = gpp.f_inf_prior(log10_T_rh = log10_T_rh)
-        #rn_f_inf_prior = gp_signals.FourierBasisGP(pl_f_inf_prior, components=components,
-                                       #Tspan=Tspan,
-                                       #combine=combine,
-                                       #coefficients=coefficients,
-                                       #selection=selection,
-                                       #modes=modes)
-        
-        #rn is modified for a low likelihood if BBN bound is violated
-        
-        #rn = rn_f_inf_prior + rn_LVK_prior + rn_f_inf_prior
-
-
 
     if break_flat:
         log10_A_flat = parameter.Uniform(-20, -11)
@@ -838,7 +805,15 @@ def common_red_noise_block(psd='powerlaw', prior='log-uniform',
         log10_f_infgw = parameter.Uniform(-11, np.log10(const.f_pl) - 30)(log_10_f_infname)
 
         cpl = gpp.custom_powerlaw(log10_r = log10_rgw, n_t = n_tgw, log10_T_rh = log10_T_rhgw, log10_f_inf = log10_f_infgw)
+
+    if psd == 'Lasky_powerlaw':
+        log10_rname = '{}_log10_r'.format(name)
+        n_tname = '{}_n_t'.format(name)
       
+        log10_rgw = parameter.Uniform(-40, -1.5)(log10_rname)
+        n_tgw = parameter.Uniform(0,6)(n_tname)
+      
+        cpl = gpp.Lasky_powerlaw(log10_r = log10_rgw, n_t = n_tgw)
     if orf is None:
         crn = gp_signals.FourierBasisGP(cpl, coefficients=coefficients, combine=combine,
                                         components=components, Tspan=Tspan,
