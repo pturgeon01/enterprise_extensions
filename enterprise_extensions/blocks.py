@@ -805,7 +805,21 @@ def common_red_noise_block(psd='powerlaw', prior='log-uniform',
         log10_f_infgw = parameter.Uniform(-11, np.log10(const.f_pl) - 30)(log_10_f_infname)
 
         cpl = gpp.custom_powerlaw(log10_r = log10_rgw, n_t = n_tgw, log10_T_rh = log10_T_rhgw, log10_f_inf = log10_f_infgw)
+      
+    if psd =='custom_runninglaw':
+        log10_rname = '{}_log10_r'.format(name)
+        n_tname = '{}_n_t'.format(name)
+        a_tname = '{}_a_t'.format(name)
+        log_10_T_rhname = '{}_log10_T_rh'.format(name)
+        log_10_f_infname = '{}_log10_f_inf_rh'.format(name)
+      
+        log10_rgw = parameter.Uniform(-40, -1.5)(log10_rname)
+        n_tgw = parameter.Uniform(0,6)(n_tname)
+        a_tgw = parameter.Uniform(-1,1)(a_tname)
+        log10_T_rhgw = parameter.Uniform(6,12)(log_10_T_rhname)
+        log10_f_infgw = parameter.Uniform(-11, np.log10(const.f_pl) - 30)(log_10_f_infname)
 
+        cpl = gpp.custom_runninglaw(log10_r = log10_rgw, n_t = n_tgw, a_t = a_tgw, log10_T_rh = log10_T_rhgw, log10_f_inf = log10_f_infgw)
     if psd == 'Lasky_powerlaw':
         log10_rname = '{}_log10_r'.format(name)
         n_tname = '{}_n_t'.format(name)
