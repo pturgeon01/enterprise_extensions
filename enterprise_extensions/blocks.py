@@ -832,20 +832,20 @@ def common_red_noise_block(psd='powerlaw', prior='log-uniform',
         n_tgw = parameter.Uniform(0,6)(n_tname)
       
         cpl = gpp.Lasky_powerlaw(log10_r = log10_rgw, n_t = n_tgw)
-  if psd == 'null_powerlaw':
-        log10_rname = '{}_log10_r'.format(name)
-        n_tname = '{}_n_t'.format(name)
-        log_10_T_rhname = '{}_log10_T_rh'.format(name)
-        log_10_f_infname = '{}_log10_f_inf_rh'.format(name)
-        if r_constraint == 'CMB':
-          log10_rgw = parameter.Uniform(-40, -1.5)(log10_rname)
-        else:
-          log10_rgw = parameter.Uniform(-40, -0.01)(log10_rname) #for no constraints  
-        n_tgw = parameter.Uniform(0,6)(n_tname)
-        log10_T_rhgw = parameter.Uniform(6,12)(log_10_T_rhname)
-        log10_f_infgw = parameter.Uniform(-11, np.log10(const.f_pl) - 30)(log_10_f_infname)
-
-        cpl = gpp.null_powerlaw(log10_r = log10_rgw, n_t = n_tgw, log10_T_rh = log10_T_rhgw, log10_f_inf = log10_f_infgw)                     
+    if psd == 'null_powerlaw':
+          log10_rname = '{}_log10_r'.format(name)
+          n_tname = '{}_n_t'.format(name)
+          log_10_T_rhname = '{}_log10_T_rh'.format(name)
+          log_10_f_infname = '{}_log10_f_inf_rh'.format(name)
+          if r_constraint == 'CMB':
+            log10_rgw = parameter.Uniform(-40, -1.5)(log10_rname)
+          else:
+            log10_rgw = parameter.Uniform(-40, -0.01)(log10_rname) #for no constraints  
+          n_tgw = parameter.Uniform(0,6)(n_tname)
+          log10_T_rhgw = parameter.Uniform(6,12)(log_10_T_rhname)
+          log10_f_infgw = parameter.Uniform(-11, np.log10(const.f_pl) - 30)(log_10_f_infname)
+  
+          cpl = gpp.null_powerlaw(log10_r = log10_rgw, n_t = n_tgw, log10_T_rh = log10_T_rhgw, log10_f_inf = log10_f_infgw)                     
     if orf is None:
         crn = gp_signals.FourierBasisGP(cpl, coefficients=coefficients, combine=combine,
                                         components=components, Tspan=Tspan,
