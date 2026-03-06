@@ -800,8 +800,9 @@ def common_red_noise_block(psd='powerlaw', prior='log-uniform',
         n_tname = '{}_n_t'.format(name)
         log_10_T_rhname = '{}_log10_T_rh'.format(name)
         log_10_f_infname = '{}_log10_f_inf_rh'.format(name)
-        if r_constraint == 'CMB':
-          log10_rgw = parameter.Uniform(-40, -1.5)(log10_rname)
+        if Phenom_constraint == 'CMB':
+            log10_rgw = parameter.Uniform(-40, -1.12)(log10_rname)
+            n_tgw = parameter.Uniform(-0.55,2.54)(n_tname)
         else:
           log10_rgw = parameter.Uniform(-40, -0.001)(log10_rname) #for no constraints  
         n_tgw = parameter.Uniform(-1,6)(n_tname)
