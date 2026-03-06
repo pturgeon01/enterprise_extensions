@@ -848,7 +848,7 @@ def model_general(psrs, tm_var=False, tm_linear=False, tmparam_list=None,
         else:
             log10_A_val = None
         crn.append(common_red_noise_block(psd=common_psd, prior=amp_prior_common, Tspan=Tspan,
-                                          components=common_components, r_constraint=r_constraint,
+                                          components=common_components, Phenom_constraint=Phenom_constraint,
                                           log10_A_val=log10_A_val, gamma_val=gamma_common,
                                           delta_val=None, orf=elem, name='gw_{}'.format(elem_name),
                                           orf_ifreq=orf_ifreq, leg_lmax=leg_lmax,
