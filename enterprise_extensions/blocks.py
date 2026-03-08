@@ -805,7 +805,7 @@ def common_red_noise_block(psd='powerlaw', prior='log-uniform',
             n_tgw = parameter.Uniform(-0.55,2.54)(n_tname)
         else:
           log10_rgw = parameter.Uniform(-40, -0.001)(log10_rname) #for no constraints  
-        n_tgw = parameter.Uniform(-1,6)(n_tname)
+          n_tgw = parameter.Uniform(-1,6)(n_tname)
         log10_T_rhgw = parameter.Uniform(6,12)(log_10_T_rhname)
         log10_f_infgw = parameter.Uniform(-11, np.log10(const.f_pl) - 30)(log_10_f_infname)
 
